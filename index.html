@@ -8,36 +8,65 @@
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="main.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<title>Quote generator</title>
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <canvas height="640" width="640" id="picture"></canvas>
+                <canvas height="640" width="1000" id="picture"></canvas>
             </div>
         </div>
     </div>
+    
+   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
     <script type="text/javascript">
-        var canvas = document.getElementById("picture");
-        var context = canvas.getContext("2d");
-        var img = new Image();
+        var picture = document.getElementById("picture"),
+        ctx = picture.getContext("2d"),
+        img = new Image();
+        img.src = "https://picsum.photos/1000/640/?random";
+        img.setAttribute('crossOrigin', 'anonymous');
+        ctx.globalAlpha = 0.5;
         img.onload = function() {
-            context.drawImage(img, 0, 0);
-        };
-        img.src = "https://picsum.photos/640/?random";
-        context.font = "50px Raleway";
-        context.fillText(response.quoteText, 100, 100);
-        
+        ctx.drawImage(img, 0, 0);
+        ctx.fillStyle = "#000";
+        ctx.globalAlpha = 1;
+        ctx.font = "30pt Montserrat";
+        quote();
+        }
+
+        function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
+    {
+      var words = text.split(" ");
+      var countWords = words.length;
+      var line = "";
+      for (var n = 0; n < countWords; n++)
+      {
+        var testLine = line + words[n] + " ";
+        var testWidth = context.measureText(testLine).width;
+        if (testWidth > maxWidth)
+        {
+          context.fillText(line, marginLeft, marginTop);
+          context.strokeText(line, marginLeft, marginTop);
+          line = words[n] + " ";
+          marginTop += lineHeight;
+        }
+        else
+        {
+          line = testLine;
+        }
+      }
+      context.fillText(line, marginLeft, marginTop);
+      context.strokeText(line, marginLeft, marginTop);
+    }   
         function quote(){
             $.ajax({
             url: "https://api.forismatic.com/api/1.0/?",
             dataType: "jsonp",
             data: "method=getQuote&format=jsonp&lang=en&jsonp=?",
             success: function( response ) {
-                
+                wrapText(ctx, response.quoteText, 150, 230, 700, 60);
             }
         });
       }
