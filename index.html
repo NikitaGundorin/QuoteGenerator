@@ -29,47 +29,49 @@
         img.setAttribute('crossOrigin', 'anonymous');
         ctx.globalAlpha = 0.5;
         img.onload = function() {
-        ctx.drawImage(img, 0, 0);
-        ctx.fillStyle = "#000";
-        ctx.globalAlpha = 1;
-        ctx.font = "30pt Montserrat";
-        quote();
+            ctx.drawImage(img, 0, 0);
+            ctx.fillStyle = "#000";
+            ctx.globalAlpha = 1;
+            ctx.font = "30pt Montserrat";
+            quote();
         }
+        
+        var dataURL = picture.toDataURL();
+        document.write(dataURL);
 
         function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
-    {
-      var words = text.split(" ");
-      var countWords = words.length;
-      var line = "";
-      for (var n = 0; n < countWords; n++)
-      {
-        var testLine = line + words[n] + " ";
-        var testWidth = context.measureText(testLine).width;
-        if (testWidth > maxWidth)
         {
-          context.fillText(line, marginLeft, marginTop);
-          context.strokeText(line, marginLeft, marginTop);
-          line = words[n] + " ";
-          marginTop += lineHeight;
-        }
-        else
-        {
-          line = testLine;
-        }
-      }
-      context.fillText(line, marginLeft, marginTop);
-      context.strokeText(line, marginLeft, marginTop);
-    }   
+            var words = text.split(" ");
+            var countWords = words.length;
+            var line = "";
+            for (var n = 0; n < countWords; n++)
+              {
+                var testLine = line + words[n] + " ";
+                var testWidth = context.measureText(testLine).width;
+                if (testWidth > maxWidth)
+                {
+                  context.fillText(line, marginLeft, marginTop);
+                  context.strokeText(line, marginLeft, marginTop);
+                  line = words[n] + " ";
+                  marginTop += lineHeight;
+                }
+                else
+                {
+                  line = testLine;
+                }
+              }
+              context.fillText(line, marginLeft, marginTop);
+              context.strokeText(line, marginLeft, marginTop);
+        }   
         function quote(){
             $.ajax({
-            url: "https://api.forismatic.com/api/1.0/?",
-            dataType: "jsonp",
-            data: "method=getQuote&format=jsonp&lang=ru&jsonp=?",
-            success: function( response ) {
-                wrapText(ctx, response.quoteText, 150, 230, 700, 60);
-            }
-        });
-      }
-        
+                url: "https://api.forismatic.com/api/1.0/?",
+                dataType: "jsonp",
+                data: "method=getQuote&format=jsonp&lang=ru&jsonp=?",
+                success: function( response ) {
+                    wrapText(ctx, response.quoteText, 150, 230, 700, 60);
+                }
+            });
+        } 
     </script>
 </body>
