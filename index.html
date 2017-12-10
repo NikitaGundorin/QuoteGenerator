@@ -12,21 +12,37 @@
 </head>
 <body>
     <div class="container">
-        <div class="row">
             <div class="col-lg-12 text-center">
                 <canvas height="640" width="1000" id="picture"></canvas>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <button type="button" class="btn btn-outline-primary" id="new" OnClick="document.location.reload();">Новая</button>
+                    <button type="button" class="btn btn-outline-success" id="save">Сохранить</button>
+                </div>
+            </div>
     </div>
+    
+    <style>
+        .row{
+            margin: 0 auto;
+        }
+        .btn{
+            margin: 10px;
+        }
+    </style>
     
    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
     <script type="text/javascript">
+        
         var picture = document.getElementById("picture"),
-        ctx = picture.getContext("2d"),
-        img = new Image();
+        ctx = picture.getContext("2d");
+        function generate(){
+            var img = new Image();
         img.src = "https://picsum.photos/1000/640/?random";
         img.setAttribute('crossOrigin', 'anonymous');
+        ctx.drawImage(img, 0, 0);
         ctx.globalAlpha = 0.5;
         img.onload = function() {
             ctx.drawImage(img, 0, 0);
@@ -35,8 +51,7 @@
             ctx.font = "30pt Montserrat";
             quote();
         }
-        
-
+        }
         
         function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
         {
@@ -73,7 +88,16 @@
             });
         } 
         
-                var image = picture.toDataURL("image/png");
-        document.write('<img src="'+image+'"/>');
+        generate();
+        
+        
+        function downloadCanvas(link, canvasId, filename) {
+            link.href = document.getElementById(canvasId).toDataURL();
+            link.download = filename;
+        }
+        
+        document.getElementById('save').addEventListener('click', function() {
+        downloadCanvas(this, 'picture', 'quote.png');
+        });
     </script>
 </body>
