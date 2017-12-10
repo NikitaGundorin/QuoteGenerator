@@ -36,9 +36,8 @@
             quote();
         }
         
-        var dataURL = picture.toDataURL();
-        document.write(dataURL);
-        document.write("Привет");
+
+        
         function wrapText(context, text, marginLeft, marginTop, maxWidth, lineHeight)
         {
             var words = text.split(" ");
@@ -73,5 +72,8 @@
                 }
             });
         } 
+        
+                var image = picture.toDataURL("image/png");
+        document.write('<img src="'+image+'"/>');
     </script>
 </body>
